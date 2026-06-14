@@ -59,7 +59,13 @@ const COLORS = [
   "hsl(330, 70%, 55%)",
 ];
 
-function BreakdownChart({ title, data }: { title: string; data: BreakdownItem[] }) {
+function BreakdownChart({
+  title,
+  data,
+}: {
+  title: string;
+  data: BreakdownItem[];
+}) {
   if (!data || data.length === 0) {
     return (
       <Card>
@@ -82,7 +88,7 @@ function BreakdownChart({ title, data }: { title: string; data: BreakdownItem[] 
       </CardHeader>
       <CardContent>
         <div className="flex flex-col sm:flex-row items-start gap-4">
-          <ResponsiveContainer width="100%" height={140}>
+          <ResponsiveContainer width="100%" height={180}>
             <PieChart>
               <Pie
                 data={data}
@@ -90,32 +96,51 @@ function BreakdownChart({ title, data }: { title: string; data: BreakdownItem[] 
                 nameKey="label"
                 cx="50%"
                 cy="50%"
-                outerRadius={60}
-                innerRadius={35}
+                outerRadius={50}
+                innerRadius={30}
               >
                 {data.map((_, i) => (
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip
-                formatter={(v: number, n: string) => [v, n]}
-                contentStyle={{ borderRadius: "8px", fontSize: 11 }}
+                wrapperStyle={{
+                  maxWidth: "220px",
+                  overflow: "hidden",
+                }}
+                contentStyle={{
+                  borderRadius: "8px",
+                  border: "1px solid hsl(220,13%,91%)",
+                  fontSize: 12,
+                  maxWidth: "220px",
+                  wordBreak: "break-word",
+                }}
               />
             </PieChart>
           </ResponsiveContainer>
-          <div className="flex-1 space-y-1.5 min-w-0">
+          <div className="flex-1 space-y-1.5 min-w-0 overflow-hidden">
             {data.slice(0, 5).map((item, i) => (
-              <div key={item.label} className="flex items-center justify-between gap-2">
+              <div
+                key={item.label}
+                className="flex items-center justify-between gap-2"
+              >
                 <div className="flex items-center gap-1.5 min-w-0">
                   <div
                     className="h-2.5 w-2.5 rounded-full shrink-0"
                     style={{ background: COLORS[i % COLORS.length] }}
                   />
-                  <span className="text-xs text-foreground truncate">{item.label}</span>
+                  <span
+                    className="text-xs text-foreground block max-w-[120px] truncate"
+                    title={item.label}
+                  >
+                    {item.label}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs font-medium">{item.count}</span>
-                  <span className="text-xs text-muted-foreground w-8 text-right">{item.percentage}%</span>
+                  <span className="text-xs text-muted-foreground w-8 text-right">
+                    {item.percentage}%
+                  </span>
                 </div>
               </div>
             ))}
@@ -138,11 +163,14 @@ export default function Analytics() {
   const { data: dailyData, isLoading: dailyLoading } = useGetDailyClicks(id, {
     query: { enabled: !!id, queryKey: getGetDailyClicksQueryKey(id) },
   });
-  const { data: breakdown, isLoading: breakdownLoading } = useGetAnalyticsBreakdown(id, {
-    query: { enabled: !!id, queryKey: getGetAnalyticsBreakdownQueryKey(id) },
-  });
+  const { data: breakdown, isLoading: breakdownLoading } =
+    useGetAnalyticsBreakdown(id, {
+      query: { enabled: !!id, queryKey: getGetAnalyticsBreakdownQueryKey(id) },
+    });
 
-  const shortLink = analytics ? `${window.location.origin}/r/${analytics.shortCode}` : "";
+  const shortLink = analytics
+    ? `${window.location.origin}/r/${analytics.shortCode}`
+    : "";
 
   const handleCopy = async () => {
     if (!shortLink) return;
@@ -155,7 +183,11 @@ export default function Analytics() {
   const chartData = (dailyData ?? []).map((d) => ({
     ...d,
     label: (() => {
-      try { return format(new Date(d.date), "MMM d"); } catch { return d.date; }
+      try {
+        return format(new Date(d.date), "MMM d");
+      } catch {
+        return d.date;
+      }
     })(),
   }));
 
@@ -165,11 +197,15 @@ export default function Analytics() {
         <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
           <Skeleton className="h-8 w-48" />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)}
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-24 rounded-xl" />
+            ))}
           </div>
           <Skeleton className="h-64 rounded-xl" />
           <div className="grid grid-cols-2 gap-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-48 rounded-xl" />
+            ))}
           </div>
         </div>
       </AppLayout>
@@ -180,7 +216,9 @@ export default function Analytics() {
     return (
       <AppLayout>
         <div className="max-w-5xl mx-auto px-6 py-20 text-center">
-          <p className="text-muted-foreground">Link not found or you don't have access.</p>
+          <p className="text-muted-foreground">
+            Link not found or you don't have access.
+          </p>
           <Button onClick={() => setLocation("/dashboard")} className="mt-4">
             Back to dashboard
           </Button>
@@ -213,7 +251,11 @@ export default function Analytics() {
                 data-testid="button-copy-short-link"
               >
                 {shortLink}
-                {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-green-500" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
               </button>
               <a
                 href={analytics.originalUrl}
@@ -222,7 +264,9 @@ export default function Analytics() {
                 className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
               >
                 <ExternalLink className="h-3 w-3" />
-                <span className="max-w-48 truncate">{analytics.originalUrl}</span>
+                <span className="max-w-48 truncate">
+                  {analytics.originalUrl}
+                </span>
               </a>
               <a
                 href={`/public/${analytics.shortCode}`}
@@ -238,7 +282,12 @@ export default function Analytics() {
           </div>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 shrink-0" data-testid="button-qr-code">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 shrink-0"
+                data-testid="button-qr-code"
+              >
                 <QrCode className="h-4 w-4" />
                 QR Code
               </Button>
@@ -246,11 +295,20 @@ export default function Analytics() {
             <DialogContent className="sm:max-w-xs">
               <DialogHeader>
                 <DialogTitle>QR Code</DialogTitle>
-                <DialogDescription>Scan to open this short link</DialogDescription>
+                <DialogDescription>
+                  Scan to open this short link
+                </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col items-center gap-4 py-4">
-                <QRCodeSVG value={shortLink} size={200} level="H" includeMargin />
-                <p className="text-xs text-muted-foreground text-center break-all">{shortLink}</p>
+                <QRCodeSVG
+                  value={shortLink}
+                  size={200}
+                  level="H"
+                  includeMargin
+                />
+                <p className="text-xs text-muted-foreground text-center break-all">
+                  {shortLink}
+                </p>
               </div>
             </DialogContent>
           </Dialog>
@@ -258,17 +316,41 @@ export default function Analytics() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { icon: MousePointerClick, label: "Total clicks", value: analytics.totalClicks.toLocaleString(), testId: "stat-total-clicks" },
-            { icon: Users, label: "Unique visitors", value: analytics.uniqueClicks.toLocaleString(), testId: "stat-unique-clicks" },
+            {
+              icon: MousePointerClick,
+              label: "Total clicks",
+              value: analytics.totalClicks.toLocaleString(),
+              testId: "stat-total-clicks",
+            },
+            {
+              icon: Users,
+              label: "Unique visitors",
+              value: analytics.uniqueClicks.toLocaleString(),
+              testId: "stat-unique-clicks",
+            },
             {
               icon: Clock,
               label: "Last click",
               value: analytics.lastVisitedAt
-                ? (() => { try { return format(new Date(analytics.lastVisitedAt), "MMM d, HH:mm"); } catch { return "—"; } })()
+                ? (() => {
+                    try {
+                      return format(
+                        new Date(analytics.lastVisitedAt),
+                        "MMM d, HH:mm",
+                      );
+                    } catch {
+                      return "—";
+                    }
+                  })()
                 : "Never",
               testId: "stat-last-visit",
             },
-            { icon: BarChart3, label: "Recent events", value: analytics.recentClicks.length, testId: "stat-recent" },
+            {
+              icon: BarChart3,
+              label: "Recent events",
+              value: analytics.recentClicks.length,
+              testId: "stat-recent",
+            },
           ].map(({ icon: Icon, label, value, testId }) => (
             <Card key={label} data-testid={testId}>
               <CardContent className="pt-5">
@@ -305,15 +387,41 @@ export default function Analytics() {
                 <AreaChart data={chartData}>
                   <defs>
                     <linearGradient id="gradClicks" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(246,80%,60%)" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="hsl(246,80%,60%)" stopOpacity={0} />
+                      <stop
+                        offset="5%"
+                        stopColor="hsl(246,80%,60%)"
+                        stopOpacity={0.15}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="hsl(246,80%,60%)"
+                        stopOpacity={0}
+                      />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(220,13%,91%)" />
-                  <XAxis dataKey="label" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} tickLine={false} axisLine={false} width={32} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="hsl(220,13%,91%)"
+                  />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 11 }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 11 }}
+                    tickLine={false}
+                    axisLine={false}
+                    width={32}
+                  />
                   <Tooltip
-                    contentStyle={{ borderRadius: "8px", border: "1px solid hsl(220,13%,91%)", fontSize: 12 }}
+                    contentStyle={{
+                      borderRadius: "8px",
+                      border: "1px solid hsl(220,13%,91%)",
+                      fontSize: 12,
+                    }}
                   />
                   <Area
                     type="monotone"
@@ -332,10 +440,15 @@ export default function Analytics() {
 
         {breakdownLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-48 rounded-xl" />
+            ))}
           </div>
         ) : breakdown ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" data-testid="breakdown-charts">
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            data-testid="breakdown-charts"
+          >
             <BreakdownChart title="Devices" data={breakdown.devices} />
             <BreakdownChart title="Browsers" data={breakdown.browsers} />
             <BreakdownChart title="Operating Systems" data={breakdown.os} />
@@ -353,25 +466,54 @@ export default function Analytics() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">Time</th>
-                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">Device</th>
-                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">Browser</th>
-                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">OS</th>
-                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">Country</th>
+                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">
+                        Time
+                      </th>
+                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">
+                        Device
+                      </th>
+                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">
+                        Browser
+                      </th>
+                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">
+                        OS
+                      </th>
+                      <th className="text-left py-2 px-2 text-xs font-medium text-muted-foreground">
+                        Country
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {analytics.recentClicks.map((click) => (
-                      <tr key={click.id} className="border-b border-border/50 hover:bg-accent/30 transition-colors" data-testid={`click-row-${click.id}`}>
+                      <tr
+                        key={click.id}
+                        className="border-b border-border/50 hover:bg-accent/30 transition-colors"
+                        data-testid={`click-row-${click.id}`}
+                      >
                         <td className="py-2 px-2 text-xs text-muted-foreground">
-                          {(() => { try { return format(new Date(click.createdAt), "MMM d, HH:mm"); } catch { return "—"; } })()}
+                          {(() => {
+                            try {
+                              return format(
+                                new Date(click.createdAt),
+                                "MMM d, HH:mm",
+                              );
+                            } catch {
+                              return "—";
+                            }
+                          })()}
                         </td>
                         <td className="py-2 px-2">
-                          <Badge variant="secondary" className="text-xs">{click.deviceType ?? "Unknown"}</Badge>
+                          <Badge variant="secondary" className="text-xs">
+                            {click.deviceType ?? "Unknown"}
+                          </Badge>
                         </td>
-                        <td className="py-2 px-2 text-xs">{click.browser ?? "—"}</td>
+                        <td className="py-2 px-2 text-xs">
+                          {click.browser ?? "—"}
+                        </td>
                         <td className="py-2 px-2 text-xs">{click.os ?? "—"}</td>
-                        <td className="py-2 px-2 text-xs">{click.country ?? "—"}</td>
+                        <td className="py-2 px-2 text-xs">
+                          {click.country ?? "—"}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
