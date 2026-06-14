@@ -133,7 +133,7 @@ function SingleUrlForm() {
               <FormLabel>Custom alias</FormLabel>
               <div className="flex items-stretch rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 aria-[invalid]:border-destructive">
                 <span className="flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input rounded-l-md whitespace-nowrap select-none">
-                  {window.location.origin}/r/
+                  /r/
                 </span>
                 <FormControl>
                   <Input
