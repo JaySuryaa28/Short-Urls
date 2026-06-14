@@ -1,0 +1,427 @@
+Act as a Senior Full-Stack Software Architect, UI/UX Designer, Backend Engineer, Database Architect, DevOps Engineer, Technical Writer, and Hackathon Mentor.
+
+I am participating in a hackathon and need to build a complete production-ready application called:
+
+# URL Shortener with Analytics
+
+The application must satisfy all requirements below and generate everything needed for development, deployment, documentation, presentation, and interview preparation.
+
+──────────────────────────────────────────────
+PROJECT OVERVIEW
+──────────────────────────────────────────────
+
+Build a full-stack URL Shortener application where authenticated users can create short URLs, manage them through a dashboard, and view detailed analytics.
+
+Tech Stack:
+
+Frontend:
+- React.js
+- React Router
+- Axios
+- Tailwind CSS
+- Recharts
+
+Backend:
+- Node.js
+- Express.js
+
+Database:
+- MongoDB Atlas
+
+Authentication:
+- JWT
+- bcrypt
+
+Deployment:
+- Frontend: Vercel
+- Backend: Render
+- Database: MongoDB Atlas
+
+Architecture:
+- REST APIs
+- MVC Pattern
+- Environment Variables
+- Secure Authentication
+- Server-side Redirect Handling
+
+──────────────────────────────────────────────
+MANDATORY FEATURES
+──────────────────────────────────────────────
+
+Authentication:
+- Signup
+- Login
+- JWT Authentication
+- Protected Routes
+- Logout
+- Password Hashing
+- User-specific URL Management
+
+URL Shortening:
+- Input Long URL
+- URL Validation
+- Generate Unique Short Code
+- Redirect to Original URL
+- Store Creation Date
+- Prevent Duplicate Short Codes
+
+Dashboard:
+- View All URLs
+- Original URL
+- Short URL
+- Creation Date
+- Total Clicks
+- Copy URL Button
+- Delete URL
+
+Analytics:
+- Click Count
+- Last Visited Time
+- Visit History
+- Timestamp Tracking
+
+UI:
+- Responsive Design
+- Mobile Friendly
+- Dashboard Layout
+- Loading States
+- Error Handling
+- Success Notifications
+- Form Validation
+
+──────────────────────────────────────────────
+BONUS FEATURES
+──────────────────────────────────────────────
+
+- Custom Alias
+- QR Code Generation
+- Link Expiry Date
+- Device Analytics
+- Browser Analytics
+- Geolocation Analytics
+- Daily Click Trend Charts
+- Public Statistics Page
+- Edit Destination URL
+- Bulk URL Upload via CSV
+- Dark Mode
+- User Profile Page
+
+──────────────────────────────────────────────
+DATABASE DESIGN
+──────────────────────────────────────────────
+
+Create complete MongoDB schema design for:
+
+1. Users Collection
+2. URLs Collection
+3. Analytics Collection
+
+For each collection provide:
+- Fields
+- Data Types
+- Required Validation
+- Indexes
+- Relationships
+- Example Documents
+
+Generate Mongoose Models.
+
+──────────────────────────────────────────────
+SYSTEM DESIGN
+──────────────────────────────────────────────
+
+Create:
+
+1. High-Level Architecture
+2. Low-Level Architecture
+3. Database ER Diagram
+4. Request Flow Diagram
+5. Authentication Flow Diagram
+6. Analytics Tracking Flow
+7. URL Redirection Flow
+
+Use Mermaid diagrams.
+
+──────────────────────────────────────────────
+BACKEND DEVELOPMENT
+──────────────────────────────────────────────
+
+Generate complete backend structure:
+
+backend/
+│
+├── config/
+├── controllers/
+├── middleware/
+├── models/
+├── routes/
+├── services/
+├── utils/
+├── validators/
+├── app.js
+├── server.js
+└── .env
+
+Create complete code for:
+
+- User Authentication
+- JWT Middleware
+- URL Creation
+- URL Retrieval
+- URL Deletion
+- URL Update
+- Redirect Service
+- Analytics Service
+- Error Handling
+- Validation Middleware
+
+Generate:
+
+- Models
+- Controllers
+- Routes
+- Middleware
+- Utilities
+- Services
+
+Provide code file-by-file.
+
+──────────────────────────────────────────────
+API DOCUMENTATION
+──────────────────────────────────────────────
+
+Create complete REST API documentation.
+
+For each endpoint provide:
+
+- Route
+- Method
+- Description
+- Authentication Required
+- Request Body
+- Response Body
+- Error Responses
+- Sample JSON
+
+Endpoints:
+
+AUTH
+POST /api/auth/register
+POST /api/auth/login
+
+URLS
+POST /api/url
+GET /api/url
+GET /api/url/:id
+PUT /api/url/:id
+DELETE /api/url/:id
+
+ANALYTICS
+GET /api/analytics/:id
+
+REDIRECT
+GET /:shortCode
+
+──────────────────────────────────────────────
+FRONTEND DEVELOPMENT
+──────────────────────────────────────────────
+
+Generate complete React project structure.
+
+frontend/
+│
+├── components/
+├── pages/
+├── services/
+├── hooks/
+├── context/
+├── utils/
+├── layouts/
+├── routes/
+└── App.jsx
+
+Create:
+
+Pages:
+- Login
+- Signup
+- Dashboard
+- Create URL
+- Analytics
+- Profile
+- Public Stats
+- Not Found
+
+Components:
+- Navbar
+- Sidebar
+- URL Table
+- Analytics Card
+- Charts
+- QR Code Generator
+- Loader
+- Toast Notification
+- Protected Route
+
+Generate:
+- React Code
+- Tailwind Styling
+- API Integration
+- State Management
+
+──────────────────────────────────────────────
+ANALYTICS IMPLEMENTATION
+──────────────────────────────────────────────
+
+Track:
+
+- Total Clicks
+- Last Visit
+- Device Type
+- Browser
+- OS
+- IP Address
+- Country
+- Daily Click Count
+
+Create:
+- Analytics Schema
+- Tracking Logic
+- Dashboard Charts
+
+──────────────────────────────────────────────
+SECURITY
+──────────────────────────────────────────────
+
+Implement:
+
+- Password Hashing
+- JWT Authentication
+- Route Protection
+- Input Validation
+- XSS Protection
+- CORS
+- Helmet
+- Rate Limiting
+- MongoDB Injection Prevention
+
+Explain all security measures.
+
+──────────────────────────────────────────────
+DEPLOYMENT
+──────────────────────────────────────────────
+
+Provide step-by-step deployment instructions for:
+
+Frontend:
+- Vercel
+
+Backend:
+- Render
+
+Database:
+- MongoDB Atlas
+
+Generate:
+- Environment Variables
+- Build Commands
+- Deployment Checklist
+
+──────────────────────────────────────────────
+TESTING
+──────────────────────────────────────────────
+
+Create:
+
+- API Testing Plan
+- Postman Collection
+- Unit Testing Strategy
+- Integration Testing Strategy
+
+──────────────────────────────────────────────
+README
+──────────────────────────────────────────────
+
+Generate a professional README.md containing:
+
+- Project Title
+- Features
+- Architecture Diagram
+- Installation Steps
+- Environment Variables
+- API Documentation
+- Database Design
+- Deployment Instructions
+- Screenshots Section
+- Future Enhancements
+
+Add this exact line at the bottom:
+
+"This project is a part of a hackathon run by https://katomaran.com"
+
+──────────────────────────────────────────────
+VIDEO PRESENTATION
+──────────────────────────────────────────────
+
+Create a complete 5-minute Loom/YouTube demo script including:
+
+- Introduction
+- Features Demo
+- Architecture Explanation
+- Database Explanation
+- API Explanation
+- Deployment
+- Conclusion
+
+──────────────────────────────────────────────
+INTERVIEW PREPARATION
+──────────────────────────────────────────────
+
+Generate:
+
+1. 50 Technical Interview Questions
+2. Detailed Answers
+3. System Design Questions
+4. MongoDB Questions
+5. React Questions
+6. Node.js Questions
+7. JWT Questions
+8. Analytics Questions
+
+──────────────────────────────────────────────
+AI PLANNING DOCUMENT
+──────────────────────────────────────────────
+
+Generate a complete AI Planning Document required for hackathon submission.
+
+Include:
+
+- Project Vision
+- User Stories
+- Functional Requirements
+- Non-Functional Requirements
+- Architecture Decisions
+- Database Decisions
+- Security Decisions
+- Deployment Decisions
+- Future Scope
+
+──────────────────────────────────────────────
+DEVELOPMENT ROADMAP
+──────────────────────────────────────────────
+
+Create a detailed 48-hour implementation roadmap with hourly tasks and milestones.
+
+Finally generate:
+1. Complete Project Plan
+2. Complete Architecture
+3. Complete Database Design
+4. Complete Backend Code
+5. Complete Frontend Code
+6. Complete API Documentation
+7. Complete README
+8. Complete Deployment Guide
+9. Complete Interview Preparation
+10. Complete Hackathon Submission Package
+
+Output everything in a professional software engineering format.

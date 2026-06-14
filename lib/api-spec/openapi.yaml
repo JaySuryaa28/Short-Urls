@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: URL Shortener with Analytics API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: urls
+    description: URL management
+  - name: analytics
+    description: Analytics operations
+  - name: redirect
+    description: URL redirection
 paths:
   /healthz:
     get:
@@ -24,6 +30,262 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /urls:
+    get:
+      operationId: listUrls
+      tags: [urls]
+      summary: List user's short URLs
+      description: Get all short URLs for the authenticated user
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of URLs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UrlListResponse"
+    post:
+      operationId: createUrl
+      tags: [urls]
+      summary: Create a short URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UrlInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortUrl"
+        "400":
+          description: Invalid input or alias taken
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /urls/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [urls]
+      summary: Dashboard summary stats
+      description: Returns aggregate stats for the authenticated user's URLs
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /urls/{id}:
+    get:
+      operationId: getUrl
+      tags: [urls]
+      summary: Get a short URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Short URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortUrl"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateUrl
+      tags: [urls]
+      summary: Update a short URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UrlUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShortUrl"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteUrl
+      tags: [urls]
+      summary: Delete a short URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /analytics/{id}:
+    get:
+      operationId: getAnalytics
+      tags: [analytics]
+      summary: Get analytics for a URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsSummary"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /analytics/{id}/daily:
+    get:
+      operationId: getDailyClicks
+      tags: [analytics]
+      summary: Get daily click chart data for a URL (last 30 days)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Daily click counts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DailyClickPoint"
+
+  /analytics/{id}/breakdown:
+    get:
+      operationId: getAnalyticsBreakdown
+      tags: [analytics]
+      summary: Device, browser, OS breakdown for a URL
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Analytics breakdown
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsBreakdown"
+
+  /redirect/{shortCode}:
+    get:
+      operationId: resolveShortCode
+      tags: [redirect]
+      summary: Resolve short code to original URL
+      description: Returns the original URL for client-side redirect
+      parameters:
+        - name: shortCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Original URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RedirectResponse"
+        "404":
+          description: Short code not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "410":
+          description: Link expired
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /urls/public/{shortCode}:
+    get:
+      operationId: getPublicStats
+      tags: [urls]
+      summary: Public statistics page for a URL
+      parameters:
+        - name: shortCode
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Public stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicStats"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +296,260 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    ShortUrl:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: string
+        originalUrl:
+          type: string
+        shortCode:
+          type: string
+        customAlias:
+          type: ["string", "null"]
+        title:
+          type: ["string", "null"]
+        expiresAt:
+          type: ["string", "null"]
+        isActive:
+          type: boolean
+        totalClicks:
+          type: integer
+        lastVisitedAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - userId
+        - originalUrl
+        - shortCode
+        - customAlias
+        - title
+        - expiresAt
+        - isActive
+        - totalClicks
+        - lastVisitedAt
+        - createdAt
+        - updatedAt
+
+    UrlInput:
+      type: object
+      properties:
+        originalUrl:
+          type: string
+        customAlias:
+          type: string
+        title:
+          type: string
+        expiresAt:
+          type: string
+      required:
+        - originalUrl
+
+    UrlUpdate:
+      type: object
+      properties:
+        originalUrl:
+          type: string
+        title:
+          type: string
+        customAlias:
+          type: string
+        expiresAt:
+          type: string
+        isActive:
+          type: boolean
+
+    UrlListResponse:
+      type: object
+      properties:
+        urls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShortUrl"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      required:
+        - urls
+        - total
+        - page
+        - limit
+
+    DashboardStats:
+      type: object
+      properties:
+        totalUrls:
+          type: integer
+        totalClicks:
+          type: integer
+        activeUrls:
+          type: integer
+        clicksThisWeek:
+          type: integer
+        topUrl:
+          $ref: "#/components/schemas/ShortUrl"
+      required:
+        - totalUrls
+        - totalClicks
+        - activeUrls
+        - clicksThisWeek
+
+    AnalyticsSummary:
+      type: object
+      properties:
+        urlId:
+          type: integer
+        shortCode:
+          type: string
+        originalUrl:
+          type: string
+        totalClicks:
+          type: integer
+        uniqueClicks:
+          type: integer
+        lastVisitedAt:
+          type: ["string", "null"]
+        recentClicks:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClickEvent"
+      required:
+        - urlId
+        - shortCode
+        - originalUrl
+        - totalClicks
+        - uniqueClicks
+        - lastVisitedAt
+        - recentClicks
+
+    ClickEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+        urlId:
+          type: integer
+        deviceType:
+          type: ["string", "null"]
+        browser:
+          type: ["string", "null"]
+        os:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        city:
+          type: ["string", "null"]
+        referrer:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+      required:
+        - id
+        - urlId
+        - deviceType
+        - browser
+        - os
+        - country
+        - city
+        - referrer
+        - createdAt
+
+    DailyClickPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        clicks:
+          type: integer
+      required:
+        - date
+        - clicks
+
+    AnalyticsBreakdown:
+      type: object
+      properties:
+        devices:
+          type: array
+          items:
+            $ref: "#/components/schemas/BreakdownItem"
+        browsers:
+          type: array
+          items:
+            $ref: "#/components/schemas/BreakdownItem"
+        os:
+          type: array
+          items:
+            $ref: "#/components/schemas/BreakdownItem"
+        countries:
+          type: array
+          items:
+            $ref: "#/components/schemas/BreakdownItem"
+      required:
+        - devices
+        - browsers
+        - os
+        - countries
+
+    BreakdownItem:
+      type: object
+      properties:
+        label:
+          type: string
+        count:
+          type: integer
+        percentage:
+          type: number
+      required:
+        - label
+        - count
+        - percentage
+
+    RedirectResponse:
+      type: object
+      properties:
+        originalUrl:
+          type: string
+        title:
+          type: ["string", "null"]
+      required:
+        - originalUrl
+        - title
+
+    PublicStats:
+      type: object
+      properties:
+        shortCode:
+          type: string
+        title:
+          type: ["string", "null"]
+        totalClicks:
+          type: integer
+        createdAt:
+          type: string
+        dailyClicks:
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyClickPoint"
+      required:
+        - shortCode
+        - title
+        - totalClicks
+        - createdAt
+        - dailyClicks

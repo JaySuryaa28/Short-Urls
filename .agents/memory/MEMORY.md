@@ -1,0 +1,1 @@
+- [Clerk auth setup](clerk-auth-web.md) — cookie-based web auth, proxyUrl unconditional, sign-in route must use `/*?`, tailwind layer order critical
