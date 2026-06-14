@@ -238,6 +238,32 @@ export const ResolveShortCodeResponse = zod.object({
 
 
 /**
+ * @summary Bulk create short URLs from parsed CSV rows
+ */
+export const BulkCreateUrlsBody = zod.object({
+  "urls": zod.array(zod.object({
+  "url": zod.string(),
+  "alias": zod.string().optional(),
+  "title": zod.string().optional(),
+  "expiresAt": zod.string().optional()
+}))
+})
+
+export const BulkCreateUrlsResponse = zod.object({
+  "total": zod.number(),
+  "succeeded": zod.number(),
+  "failed": zod.number(),
+  "results": zod.array(zod.object({
+  "row": zod.number(),
+  "url": zod.string(),
+  "success": zod.boolean(),
+  "shortCode": zod.string().optional(),
+  "error": zod.string().optional()
+}))
+})
+
+
+/**
  * @summary Public statistics page for a URL
  */
 export const GetPublicStatsParams = zod.object({

@@ -3,8 +3,15 @@ import { Link } from "wouter";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  Copy, Check, Trash2, BarChart3, ExternalLink,
-  Power, PowerOff, Calendar, QrCode
+  Copy,
+  Check,
+  Trash2,
+  BarChart3,
+  ExternalLink,
+  Power,
+  PowerOff,
+  Calendar,
+  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -63,7 +70,9 @@ export default function UrlCard({ url }: UrlCardProps) {
         onSuccess: () => {
           toast.success("Link deleted");
           queryClient.invalidateQueries({ queryKey: getListUrlsQueryKey() });
-          queryClient.invalidateQueries({ queryKey: getGetDashboardStatsQueryKey() });
+          queryClient.invalidateQueries({
+            queryKey: getGetDashboardStatsQueryKey(),
+          });
         },
         onError: () => toast.error("Failed to delete link"),
       },
@@ -92,15 +101,22 @@ export default function UrlCard({ url }: UrlCardProps) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
             {url.title && (
-              <span className="font-medium text-sm text-foreground truncate" data-testid={`text-title-${url.id}`}>
+              <span
+                className="font-medium text-sm text-foreground truncate"
+                data-testid={`text-title-${url.id}`}
+              >
                 {url.title}
               </span>
             )}
             {!url.isActive && (
-              <Badge variant="secondary" className="text-xs">Inactive</Badge>
+              <Badge variant="secondary" className="text-xs">
+                Inactive
+              </Badge>
             )}
             {url.expiresAt && new Date(url.expiresAt) < new Date() && (
-              <Badge variant="destructive" className="text-xs">Expired</Badge>
+              <Badge variant="destructive" className="text-xs">
+                Expired
+              </Badge>
             )}
           </div>
 
@@ -112,14 +128,21 @@ export default function UrlCard({ url }: UrlCardProps) {
             {shortLink}
           </button>
 
-          <p className="text-xs text-muted-foreground truncate max-w-xs" data-testid={`text-original-url-${url.id}`}>
+          <p
+            className="text-xs text-muted-foreground truncate max-w-xs"
+            data-testid={`text-original-url-${url.id}`}
+          >
             {url.originalUrl}
           </p>
 
           <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-            <span data-testid={`text-clicks-${url.id}`}>{url.totalClicks.toLocaleString()} clicks</span>
+            <span data-testid={`text-clicks-${url.id}`}>
+              {url.totalClicks.toLocaleString()} clicks
+            </span>
             {url.lastVisitedAt && (
-              <span>Last visit {format(new Date(url.lastVisitedAt), "MMM d")}</span>
+              <span>
+                Last visit {format(new Date(url.lastVisitedAt), "MMM d")}
+              </span>
             )}
             {url.expiresAt && (
               <span className="flex items-center gap-1">
@@ -138,7 +161,11 @@ export default function UrlCard({ url }: UrlCardProps) {
             onClick={handleCopy}
             data-testid={`button-copy-${url.id}`}
           >
-            {copied ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-green-500" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </Button>
 
           <Dialog>
@@ -155,11 +182,20 @@ export default function UrlCard({ url }: UrlCardProps) {
             <DialogContent className="sm:max-w-xs">
               <DialogHeader>
                 <DialogTitle>QR Code</DialogTitle>
-                <DialogDescription>Scan to open this short link</DialogDescription>
+                <DialogDescription>
+                  Scan to open this short link
+                </DialogDescription>
               </DialogHeader>
               <div className="flex flex-col items-center gap-4 py-4">
-                <QRCodeSVG value={shortLink} size={200} level="H" includeMargin />
-                <p className="text-xs text-muted-foreground text-center break-all">{shortLink}</p>
+                <QRCodeSVG
+                  value={shortLink}
+                  size={200}
+                  level="H"
+                  includeMargin
+                />
+                <p className="text-xs text-muted-foreground text-center break-all">
+                  {shortLink}
+                </p>
               </div>
             </DialogContent>
           </Dialog>
@@ -176,7 +212,12 @@ export default function UrlCard({ url }: UrlCardProps) {
           </Link>
 
           <a href={url.originalUrl} target="_blank" rel="noopener noreferrer">
-            <Button variant="ghost" size="icon" className="h-8 w-8" data-testid={`button-open-${url.id}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              data-testid={`button-open-${url.id}`}
+            >
               <ExternalLink className="h-3.5 w-3.5" />
             </Button>
           </a>
@@ -189,9 +230,11 @@ export default function UrlCard({ url }: UrlCardProps) {
             disabled={updateUrl.isPending}
             data-testid={`button-toggle-${url.id}`}
           >
-            {url.isActive
-              ? <PowerOff className="h-3.5 w-3.5 text-muted-foreground" />
-              : <Power className="h-3.5 w-3.5 text-green-500" />}
+            {url.isActive ? (
+              <PowerOff className="h-3.5 w-3.5 text-muted-foreground" />
+            ) : (
+              <Power className="h-3.5 w-3.5 text-green-500" />
+            )}
           </Button>
 
           <AlertDialog>
@@ -209,7 +252,9 @@ export default function UrlCard({ url }: UrlCardProps) {
               <AlertDialogHeader>
                 <AlertDialogTitle>Delete this link?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently delete <strong className="font-mono">/r/{url.shortCode}</strong> and all its analytics. This cannot be undone.
+                  This will permanently delete{" "}
+                  <strong className="font-mono">/r/{url.shortCode}</strong> and
+                  all its analytics. This cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

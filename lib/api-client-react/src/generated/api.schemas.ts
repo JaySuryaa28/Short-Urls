@@ -109,6 +109,32 @@ export interface AnalyticsBreakdown {
   countries: BreakdownItem[];
 }
 
+export interface BulkUrlItem {
+  url: string;
+  alias?: string;
+  title?: string;
+  expiresAt?: string;
+}
+
+export interface BulkUrlInput {
+  urls: BulkUrlItem[];
+}
+
+export interface BulkUrlRowResult {
+  row: number;
+  url: string;
+  success: boolean;
+  shortCode?: string;
+  error?: string;
+}
+
+export interface BulkUploadResult {
+  total: number;
+  succeeded: number;
+  failed: number;
+  results: BulkUrlRowResult[];
+}
+
 export interface RedirectResponse {
   originalUrl: string;
   /** @nullable */

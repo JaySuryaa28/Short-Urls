@@ -8,6 +8,7 @@ import {
   UpdateUrlParams,
   UpdateUrlBody,
   DeleteUrlParams,
+  BulkCreateUrlsBody,
 } from "@workspace/api-zod";
 import { requireAuth } from "../middlewares/requireAuth";
 import { generateShortCode } from "../lib/shortCode";
@@ -189,6 +190,87 @@ router.post("/urls", requireAuth, async (req, res): Promise<void> => {
     .returning();
 
   res.status(201).json(url);
+});
+
+router.post("/urls/bulk", requireAuth, async (req, res): Promise<void> => {
+  const userId = req.userId!;
+  const parsed = BulkCreateUrlsBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+
+  const { urls } = parsed.data;
+  const results = [];
+  let succeeded = 0;
+  let failed = 0;
+
+  for (let i = 0; i < urls.length; i++) {
+    const item = urls[i];
+    const row = i + 1;
+
+    try {
+      if (!item.url || !item.url.startsWith("http")) {
+        failed++;
+        results.push({ row, url: item.url, success: false, error: "Invalid URL" });
+        continue;
+      }
+
+      const alias = item.alias?.trim() || undefined;
+
+      if (alias) {
+        if (!/^[a-zA-Z0-9_-]+$/.test(alias)) {
+          failed++;
+          results.push({ row, url: item.url, success: false, error: "Invalid alias characters" });
+          continue;
+        }
+        const [existing] = await db
+          .select({ id: urlsTable.id })
+          .from(urlsTable)
+          .where(eq(urlsTable.shortCode, alias))
+          .limit(1);
+        if (existing) {
+          failed++;
+          results.push({ row, url: item.url, success: false, error: "Alias already taken" });
+          continue;
+        }
+      }
+
+      let shortCode = alias;
+      if (!shortCode) {
+        let unique = false;
+        while (!unique) {
+          shortCode = generateShortCode();
+          const [ex] = await db
+            .select({ id: urlsTable.id })
+            .from(urlsTable)
+            .where(eq(urlsTable.shortCode, shortCode))
+            .limit(1);
+          if (!ex) unique = true;
+        }
+      }
+
+      const [url] = await db
+        .insert(urlsTable)
+        .values({
+          userId,
+          originalUrl: item.url,
+          shortCode: shortCode!,
+          customAlias: alias ?? null,
+          title: item.title?.trim() || null,
+          expiresAt: item.expiresAt ? new Date(item.expiresAt) : null,
+        })
+        .returning();
+
+      succeeded++;
+      results.push({ row, url: item.url, success: true, shortCode: url.shortCode });
+    } catch {
+      failed++;
+      results.push({ row, url: item.url, success: false, error: "Internal error" });
+    }
+  }
+
+  res.json({ total: urls.length, succeeded, failed, results });
 });
 
 router.get("/urls/:id", requireAuth, async (req, res): Promise<void> => {

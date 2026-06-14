@@ -22,6 +22,8 @@ import type {
 import type {
   AnalyticsBreakdown,
   AnalyticsSummary,
+  BulkUploadResult,
+  BulkUrlInput,
   DailyClickPoint,
   DashboardStats,
   ErrorResponse,
@@ -886,6 +888,77 @@ export function useResolveShortCode<TData = Awaited<ReturnType<typeof resolveSho
 
 
 
+
+export const getBulkCreateUrlsUrl = () => {
+
+
+
+
+  return `/api/urls/bulk`
+}
+
+/**
+ * @summary Bulk create short URLs from parsed CSV rows
+ */
+export const bulkCreateUrls = async (bulkUrlInput: BulkUrlInput, options?: RequestInit): Promise<BulkUploadResult> => {
+
+  return customFetch<BulkUploadResult>(getBulkCreateUrlsUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      bulkUrlInput,)
+  }
+);}
+
+
+
+
+export const getBulkCreateUrlsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateUrls>>, TError,{data: BodyType<BulkUrlInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof bulkCreateUrls>>, TError,{data: BodyType<BulkUrlInput>}, TContext> => {
+
+const mutationKey = ['bulkCreateUrls'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bulkCreateUrls>>, {data: BodyType<BulkUrlInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  bulkCreateUrls(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BulkCreateUrlsMutationResult = NonNullable<Awaited<ReturnType<typeof bulkCreateUrls>>>
+    export type BulkCreateUrlsMutationBody = BodyType<BulkUrlInput>
+    export type BulkCreateUrlsMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Bulk create short URLs from parsed CSV rows
+ */
+export const useBulkCreateUrls = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bulkCreateUrls>>, TError,{data: BodyType<BulkUrlInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof bulkCreateUrls>>,
+        TError,
+        {data: BodyType<BulkUrlInput>},
+        TContext
+      > => {
+      return useMutation(getBulkCreateUrlsMutationOptions(options));
+    }
 
 export const getGetPublicStatsUrl = (shortCode: string,) => {
 
