@@ -374,9 +374,9 @@ Jay Suryaa R
 
 ---
 
-## 📄 License
+## License
 
-This project is developed for educational and hackathon purposes.
+This project is licensed under the MIT License.
 
 ---
 
