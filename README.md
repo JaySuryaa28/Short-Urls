@@ -325,9 +325,8 @@ AI tools were used for:
 
 Add your Loom or YouTube video link here.
 
-Example:
-
-https://youtube.com/watch?v=YOUR_VIDEO_ID
+VIDEO:
+https://youtu.be/sxVFqxplYn8
 
 ---
 
