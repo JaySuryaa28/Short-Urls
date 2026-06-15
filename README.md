@@ -315,7 +315,7 @@ AI tools were used for:
 
 ### Dashboard
 
-(Add Screenshot)
+("C:\Users\shree.NITHIYASHREE\OneDrive\Pictures\Screenshots\Screenshot 2026-06-15 101948.png")
 
 ### Analytics Page
 
