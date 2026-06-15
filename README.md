@@ -302,31 +302,25 @@ AI tools were used for:
 * Documentation generation
 
 ---
+## Screenshots
 
-## 📸 Screenshots
+### Opening Page
+![Opening Page](Opening%20page.png)
 
 ### Login Page
+![Login Page](LOGIN.png)
 
-(Add Screenshot)
-
-### Registration Page
-
-(Add Screenshot)
+### Authentication Page
+![Authentication Page](Authentication%20page.png)
 
 ### Dashboard
+![Dashboard](Dashboard.png)
 
-("C:\Users\shree.NITHIYASHREE\OneDrive\Pictures\Screenshots\Screenshot 2026-06-15 101948.png")
-
-### Analytics Page
-
-(Add Screenshot)
+### Analytics
+![Analytics](Analytics.png)
 
 ### Bulk CSV Upload
-
-(Add Screenshot)
-
----
-
+![Bulk CSV Upload](Bulk_csv_Upload.png)
 ## 🎥 Demo Video
 
 Add your Loom or YouTube video link here.
